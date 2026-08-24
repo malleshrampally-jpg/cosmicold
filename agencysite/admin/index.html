@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Dashboard — Cosmic Agency</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    /* ── Toast ── */
+    #toast-container {
+      position: fixed; bottom: 28px; right: 24px; z-index: 9999;
+      display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+    }
+    .toast {
+      padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 600;
+      opacity: 0; transform: translateY(12px);
+      transition: opacity .3s ease, transform .3s ease; pointer-events: none; max-width: 320px;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: rgba(48,209,88,0.18);  border: 1px solid rgba(48,209,88,0.4);  color: #30D158; }
+    .toast.error   { background: rgba(255,69,58,0.18);  border: 1px solid rgba(255,69,58,0.4);  color: #FF453A; }
+    .toast.info    { background: rgba(10,132,255,0.18); border: 1px solid rgba(10,132,255,0.4); color: #0A84FF; }
+
+    /* ── Stats grid ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px 18px;
+      transition: border-color .2s, transform .2s;
+    }
+    .stat-card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-1px); }
+    .stat-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; color: #505060; font-weight: 700; margin-bottom: 8px; }
+    .stat-value { font-size: 28px; font-weight: 800; line-height: 1; font-family: monospace; }
+    .stat-sub   { font-size: 11px; font-family: monospace; color: #505060; margin-top: 5px; }
+
+    /* ── Toolbar ── */
+    .orders-toolbar {
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px;
+    }
+    .orders-toolbar select, .orders-toolbar input {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 10px; padding: 9px 12px;
+      color: #f0f0f5; font-size: 13px; font-family: inherit; outline: none;
+      transition: border-color .2s;
+    }
+    .orders-toolbar select:focus, .orders-toolbar input:focus { border-color: rgba(10,132,255,0.5); }
+    .orders-toolbar input { flex: 1; min-width: 180px; }
+    .orders-toolbar input::placeholder { color: #505060; }
+
+    /* ── Bulk bar ── */
+    #bulk-bar {
+      display: none; padding: 10px 0; margin-bottom: 10px;
+      align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12.5px;
+      border-top: 1px solid rgba(10,132,255,0.18);
+      border-bottom: 1px solid rgba(10,132,255,0.18);
+    }
+    #bulk-bar.visible { display: flex; }
+    #bulk-count { color: #0A84FF; font-weight: 700; font-family: monospace; }
+    #bulk-bar select {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(10,132,255,0.25);
+      border-radius: 8px; color: #f0f0f5; padding: 6px 10px; font-size: 12.5px; font-family: inherit;
+    }
+    #bulk-apply { padding: 6px 18px; border-radius: 8px; border: none; background: #0A84FF; color: #fff; font-size: 12.5px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    #bulk-clear  { padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #88889a; font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit; }
+
+    /* ── Order cards ── */
+    #orders-list { display: flex; flex-direction: column; gap: 8px; }
+    .order-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; padding: 16px 18px;
+      cursor: pointer;
+      transition: border-color .2s, background .2s, transform .2s, box-shadow .2s;
+    }
+    .order-card:hover { border-color: rgba(255,255,255,0.14); background: rgba(255,255,255,0.05); }
+
+    /* ── Confirm dialog ── */
+    .confirm-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.8); backdrop-filter: blur(4px);
+      z-index: 2000; align-items: center; justify-content: center; padding: 20px;
+    }
+    .confirm-backdrop.open { display: flex; }
+    .confirm-box {
+      background: rgba(14,14,26,0.98); border: 1px solid rgba(255,71,87,.3);
+      border-radius: 16px; padding: 28px; max-width: 380px; width: 100%;
+      animation: slideUp .2s ease both;
+    }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .confirm-box h3 { font-size: 16px; font-weight: 800; margin-bottom: 8px; color: #FF453A; }
+    .confirm-box p  { font-size: 13px; color: #88889a; margin-bottom: 20px; line-height: 1.6; }
+    .confirm-actions { display: flex; gap: 10px; }
+    .confirm-yes { flex: 1; padding: 10px; border-radius: 9px; border: none; background: #FF453A; color: #fff; font-weight: 700; font-size: 13px; cursor: pointer; font-family: inherit; }
+    .confirm-no  { padding: 10px 18px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #88889a; font-weight: 600; font-size: 13px; cursor: pointer; font-family: inherit; }
+
+    kbd {
+      display: inline-block; padding: 1px 6px; border-radius: 5px;
+      border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.05);
+      font-size: 10px; font-family: monospace; color: #88889a;
+    }
+    .count-pill {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 999px; padding: 3px 10px;
+      font-size: 11px; font-family: monospace; color: #88889a;
+    }
+  </style>
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<!-- Delete Confirm Dialog -->
+<div class="confirm-backdrop" id="confirm-dialog">
+  <div class="confirm-box">
+    <h3>🗑 Delete Order?</h3>
+    <p id="confirm-msg">This action cannot be undone.</p>
+    <div class="confirm-actions">
+      <button class="confirm-yes" id="confirm-yes">Yes, Delete</button>
+      <button class="confirm-no"  id="confirm-no">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <h2>Admin Dashboard</h2>
+  <nav>
+    <a href="/index.html">Home</a>
+    <a href="index.html" class="active">Dashboard</a>
+    <a href="users.html">Users</a>
+    <a href="atestimonials.html">Testimonials</a>
+    <button id="logout-btn" class="danger">Logout</button>
+  </nav>
+</header>
+
+<main>
+  <!-- Stats -->
+  <section class="card">
+    <h3 style="margin-bottom:16px;">Overview</h3>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value" id="stat-total">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pending</div>
+        <div class="stat-value" id="stat-pending" style="color:#FF9F0A;">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">In Progress</div>
+        <div class="stat-value" id="stat-inprogress" style="color:#0A84FF;">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Review</div>
+        <div class="stat-value" id="stat-review" style="color:#BF5AF2;">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Completed</div>
+        <div class="stat-value" id="stat-completed" style="color:#30D158;">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Revenue</div>
+        <div class="stat-value" id="stat-revenue" style="color:#00d4aa;font-size:20px;">—</div>
+        <div class="stat-sub"   id="stat-revenue-sub"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Orders -->
+  <section class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+      <div>
+        <h3 style="margin:0;">Orders</h3>
+        <div style="font-size:11px;color:#505060;margin-top:3px;font-family:monospace;">
+          <kbd>Esc</kbd> close &nbsp;·&nbsp; <kbd>/</kbd> search &nbsp;·&nbsp; <kbd>E</kbd> CSV
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <span class="count-pill" id="orders-count">— orders</span>
+        <button id="orders-sort" style="padding:7px 14px;border-radius:9px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:#88889a;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;">↓ Newest</button>
+        <button id="orders-export" style="padding:7px 14px;border-radius:9px;border:1px solid rgba(10,132,255,0.3);background:rgba(10,132,255,0.08);color:#0A84FF;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;">⬇ CSV</button>
+      </div>
+    </div>
+
+    <div class="orders-toolbar">
+      <select id="orders-filter-status">
+        <option value="">All Statuses</option>
+        <option>Pending</option><option>In Progress</option>
+        <option>Review</option><option>Completed</option><option>Cancelled</option>
+      </select>
+      <select id="orders-filter-payment">
+        <option value="">All Payments</option>
+        <option>Awaiting Deposit</option><option>Deposit Received</option>
+        <option>Advance Paid</option><option>Paid</option><option>Refunded</option>
+      </select>
+      <input id="orders-search" placeholder="Search name, ID, email…">
+    </div>
+
+    <div id="bulk-bar">
+      <span id="bulk-count">0 selected</span>
+      <select id="bulk-status">
+        <option value="">Set status…</option>
+        <option>Pending</option><option>In Progress</option>
+        <option>Review</option><option>Completed</option><option>Cancelled</option>
+      </select>
+      <select id="bulk-payment">
+        <option value="">Set payment…</option>
+        <option>Awaiting Deposit</option><option>Deposit Received</option>
+        <option>Advance Paid</option><option>Paid</option><option>Refunded</option>
+      </select>
+      <button id="bulk-apply">Apply</button>
+      <button id="bulk-clear">Clear</button>
+    </div>
+
+    <div id="orders-list">
+      <p style="color:#505060;font-family:monospace;padding:20px 0;">Loading orders…</p>
+    </div>
+  </section>
+</main>
+
+<footer class="footer" style="text-align:center;padding:2rem 1rem;">
+  <p class="text-muted">© 2026 Cosmic Agency. All Rights Reserved. <a href="/terms.html">Terms & Conditions</a></p>
+</footer>
+
+<script type="module">
+  import { db } from '/assets/js/firebase.js';
+  import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+  import { getAuth, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+
+  // Logout
+  const auth = getAuth();
+  document.getElementById('logout-btn')?.addEventListener('click', async () => {
+    await signOut(auth);
+    window.location.href = '/admin/login.html';
+  });
+
+  // Toast
+  window.showToast = function(msg, type = 'info', duration = 3000) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.textContent = msg;
+    container.appendChild(t);
+    requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
+    setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, duration);
+  };
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    const active = document.activeElement;
+    const typing = ['INPUT','TEXTAREA','SELECT'].includes(active.tagName);
+    if (e.key === 'Escape') document.getElementById('confirm-dialog')?.classList.remove('open');
+    if (e.key === '/' && !typing) { e.preventDefault(); document.getElementById('orders-search')?.focus(); }
+    if ((e.key === 'e' || e.key === 'E') && !typing) document.getElementById('orders-export')?.click();
+  });
+
+  // Firebase probe then load orders
+  try {
+    await getDocs(collection(db, 'orders'));
+  } catch (err) {
+    document.getElementById('orders-list').innerHTML =
+      `<p style="color:#FF453A;font-family:monospace;padding:16px 0;">Firebase error: ${err.code}</p>`;
+  }
+
+  const { initAdminOrders } = await import('../assets/js/admin/orders.js');
+  initAdminOrders();
+</script>
+
+<script type="module">
+  import { initMenu } from '/assets/js/menu.js';
+  initMenu();
+</script>
+
+</body>
+</html>

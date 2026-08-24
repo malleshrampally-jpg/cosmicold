@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Testimonials</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .admin-media-thumb { max-width:100%; border-radius:8px; margin:8px 0; display:block; }
+    .badge { padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; }
+    .badge-featured { background:rgba(245,158,11,0.2); color:#fbbf24; }
+    .badge-hidden   { background:rgba(100,100,100,0.2); color:#888; }
+    .hint { font-size:0.8rem; color:#888; margin-top:4px; }
+    .hint.error { color:#f87171; }
+
+    /* Avatar preview row */
+    #avatarPreview {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    #avatarPreviewImg {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.15);
+      display: block;
+    }
+    .avatar-preview-label {
+      font-size: 0.8rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>Admin Dashboard</h2>
+  <nav>
+    <a href="/index.html">Home</a>
+    <a href="index.html">Dashboard</a>
+    <a href="users.html">Users</a>
+    <a href="atestimonials.html" class="active">Testimonials</a>
+    <button id="logout-btn" class="danger">Logout</button>
+  </nav>
+</header>
+
+<section class="card">
+  <h2>Add Testimonial</h2>
+
+  <form>
+    <label for="clientName">Client Name</label>
+    <input id="clientName" type="text" placeholder="e.g. John Smith" required>
+
+    <!-- Avatar URL field -->
+    <label for="avatarUrl">
+      Client Avatar URL
+      <span style="color:#888;font-weight:400;font-size:0.85rem;">(optional)</span>
+    </label>
+    <input
+      id="avatarUrl"
+      type="url"
+      placeholder="https://example.com/photo.jpg"
+    >
+    <div id="avatarPreview">
+      <img id="avatarPreviewImg" src="" alt="Avatar preview">
+      <span class="avatar-preview-label">Preview</span>
+    </div>
+    <p class="hint">Direct image URL (imgur, Discord CDN, social profile pic, etc.)</p>
+
+    <label for="message">Review Text</label>
+    <textarea id="message" rows="3" placeholder="What did they say?" required></textarea>
+
+    <label for="rating">Rating (1–5)</label>
+    <input id="rating" type="number" min="1" max="5" value="5">
+
+    <label class="toggle-label">
+      <input id="featured" type="checkbox"> Feature on homepage
+    </label>
+
+    <label for="testimonialType">Testimonial Type</label>
+    <select id="testimonialType">
+      <option value="text">💬 Text only</option>
+      <option value="image">🖼️ Image / Screenshot</option>
+      <option value="video">🎬 Video</option>
+    </select>
+
+    <!-- Shown only for image / video types -->
+    <div id="mediaWrapper" style="display:none;">
+      <label for="mediaLink">Google Drive Share Link</label>
+      <input
+        id="mediaLink"
+        type="url"
+        placeholder="https://drive.google.com/file/d/…/view?usp=sharing"
+      >
+      <p id="mediaHint" class="hint">Paste a Google Drive share link</p>
+      <p class="hint">
+        ⚠️ The file must be set to <strong>"Anyone with the link"</strong> in Drive sharing settings.
+      </p>
+      <div id="mediaPreview"></div>
+    </div>
+
+    <button type="submit">Add Testimonial</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>All Testimonials</h2>
+  <div id="testimonialList"></div>
+</section>
+
+<script type="module" src="/assets/js/admin/testimonials.js"></script>
+
+<footer class="footer" style="text-align:center;padding:2rem 1rem;">
+  <p class="text-muted">© 2026 Cosmic Agency. All Rights Reserved. <a href="/terms.html">Terms & Conditions</a></p>
+</footer>
+
+</body>
+</html>

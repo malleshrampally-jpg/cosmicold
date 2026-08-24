@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cosmic Agency - Testimonials from our clients. See how our editors create top-notch short-form video content.">
+  <meta name="keywords" content="Cosmic Agency, Testimonials, Short-form Video, Editors, Reels, Shorts, TikTok Editing">
+  <title>Cosmic Agency - Testimonials</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    /* ── Type badges ── */
+    .type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .type-badge.text  { background: rgba(99,102,241,0.15); color: #818cf8; }
+    .type-badge.image { background: rgba(16,185,129,0.15); color: #34d399; }
+    .type-badge.video { background: rgba(245,158,11,0.15);  color: #fbbf24; }
+
+    /* ── Drive image thumbnail ── */
+    .testimonial-screenshot {
+      width: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin: 10px 0;
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: zoom-in;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: block;
+    }
+    .testimonial-screenshot:hover {
+      transform: scale(1.01);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+    }
+
+    /* ── Drive video iframe ── */
+    .testimonial-video-wrap {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 */
+      margin: 10px 0;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .testimonial-video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* ── Lightbox ── */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img {
+      max-width: 92vw;
+      max-height: 92vh;
+      border-radius: 12px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+    }
+    #lightbox-close {
+      position: absolute;
+      top: 18px; right: 22px;
+      font-size: 2.2rem;
+      color: #fff;
+      cursor: pointer;
+      background: none;
+      border: none;
+      opacity: 0.7;
+      transition: opacity 0.15s;
+      line-height: 1;
+    }
+    #lightbox-close:hover { opacity: 1; }
+
+    /* ── Filter tabs ── */
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .filter-tab {
+      padding: 7px 18px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: var(--text-secondary, #aaa);
+      transition: all 0.2s ease;
+    }
+    .filter-tab:hover,
+    .filter-tab.active {
+      background: var(--accent, #818cf8);
+      border-color: var(--accent, #818cf8);
+      color: #fff;
+    }
+
+    /* ── Grid ── */
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    /* ── Fade-up animation ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .testimonial-card {
+      animation: fadeUp 0.4s ease both;
+    }
+
+    /* ── Client byline with avatar ── */
+    .client-byline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .client-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.12);
+      flex-shrink: 0;
+    }
+    .client-avatar-fallback {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(99,102,241,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #818cf8;
+      flex-shrink: 0;
+    }
+    .client-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<script>
+document.querySelectorAll("a[href]").forEach(link => {
+  const url = link.getAttribute("href");
+  if (url.startsWith("#") || url.startsWith("http")) return;
+  link.addEventListener("click", e => {
+    e.preventDefault();
+    document.body.classList.add("page-exit");
+    setTimeout(() => { window.location.href = url; }, 400);
+  });
+});
+</script>
+
+<body>
+
+<header class="apple-nav">
+  <div class="nav-left">
+    <img src="/assets/images/logo-placeholder.png" class="nav-logo">
+    <span><a href="/" style="text-decoration:none;color:var(--text-primary);">Cosmic Agency</a></span>
+  </div>
+  <nav class="nav-center">
+    <a href="/index.html">Home</a>
+    <a href="/about.html">About</a>
+    <a href="/portfolio.html">Portfolio</a>
+    <a href="/testimonials.html" class="active">Testimonials</a>
+  </nav>
+</header>
+
+<!-- Lightbox for screenshots -->
+<div id="lightbox">
+  <button id="lightbox-close">&times;</button>
+  <img id="lightbox-img" src="" alt="Screenshot">
+</div>
+
+<main>
+  <section class="card">
+    <h2>What Our Clients Say</h2>
+
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">All</button>
+      <button class="filter-tab" data-filter="text">💬 Reviews</button>
+      <button class="filter-tab" data-filter="image">🖼️ Screenshots</button>
+      <button class="filter-tab" data-filter="video">🎬 Videos</button>
+    </div>
+
+    <div id="testimonial-grid" class="testimonial-grid"></div>
+  </section>
+</main>
+
+<footer class="footer">
+  Cosmic Agency &copy; 2026 — <a href="/terms.html">Terms &amp; Conditions</a>
+</footer>
+
+<script type="module">
+  import { db } from "./assets/js/firebase.js";
+  import {
+    collection, getDocs, query, orderBy
+  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+  const grid   = document.getElementById("testimonial-grid");
+  let allCards = [];
+
+  /* ── Load from Firestore ── */
+  async function loadTestimonials() {
+    grid.innerHTML = "<p>Loading testimonials...</p>";
+
+    try {
+      const q = query(
+        collection(db, "testimonials"),
+        orderBy("rating", "desc")
+      );
+
+      const snap = await getDocs(q);
+      grid.innerHTML = "";
+      allCards = [];
+
+      if (snap.empty) {
+        grid.innerHTML = "<p>No testimonials available yet.</p>";
+        return;
+      }
+
+      snap.forEach((docSnap, i) => {
+        const t   = docSnap.data();
+        const div = buildCard(t, i);
+        allCards.push({ el: div, type: t.type || "text" });
+        grid.appendChild(div);
+      });
+
+    } catch (err) {
+      console.error(err);
+      grid.innerHTML = "<p>Failed to load testimonials.</p>";
+    }
+  }
+
+  /* ── Build a single card ── */
+  function buildCard(t, index) {
+    const type      = t.type || "text";
+    const typeLabel = { text: "💬 Review", image: "🖼️ Screenshot", video: "🎬 Video" }[type];
+    const filled    = "★".repeat(t.rating || 5);
+    const empty     = "☆".repeat(5 - (t.rating || 5));
+    const initial   = (t.clientName || "?")[0].toUpperCase();
+
+    const div = document.createElement("div");
+    div.className = "testimonial-card card";
+    div.style.animationDelay = `${index * 60}ms`;
+
+    let mediaHTML = "";
+    if (type === "image" && t.mediaUrl) {
+      mediaHTML = `
+        <img
+          src="${t.mediaUrl}"
+          alt="Client screenshot"
+          class="testimonial-screenshot"
+          data-lightbox="${t.mediaUrl}"
+          loading="lazy"
+        >
+      `;
+    } else if (type === "video" && t.mediaUrl) {
+      mediaHTML = `
+        <div class="testimonial-video-wrap">
+          <iframe
+            src="${t.mediaUrl}"
+            allow="autoplay"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
+        </div>
+      `;
+    }
+
+    /* ── Avatar: real image with fallback initial ── */
+    const avatarHTML = t.avatarUrl
+      ? `<img
+           src="${t.avatarUrl}"
+           alt="${t.clientName}"
+           class="client-avatar"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+         >
+         <div class="client-avatar-fallback" style="display:none;">${initial}</div>`
+      : `<div class="client-avatar-fallback">${initial}</div>`;
+
+    div.innerHTML = `
+      <span class="type-badge ${type}">${typeLabel}</span>
+      ${mediaHTML}
+      <p>"${t.message}"</p>
+      <div class="client-byline">
+        ${avatarHTML}
+        <span class="client-name">— ${t.clientName}</span>
+      </div>
+      <div class="stars" style="margin-top:8px;color:#f59e0b;letter-spacing:2px;padding-left:46px;">${filled}${empty}</div>
+    `;
+
+    return div;
+  }
+
+  /* ── Filter tabs ── */
+  document.querySelectorAll(".filter-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".filter-tab").forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      const filter = tab.dataset.filter;
+      allCards.forEach(({ el, type }) => {
+        el.style.display = (filter === "all" || type === filter) ? "" : "none";
+      });
+    });
+  });
+
+  /* ── Lightbox ── */
+  const lightbox      = document.getElementById("lightbox");
+  const lightboxImg   = document.getElementById("lightbox-img");
+  const lightboxClose = document.getElementById("lightbox-close");
+
+  document.addEventListener("click", e => {
+    if (e.target.dataset.lightbox) {
+      lightboxImg.src = e.target.dataset.lightbox;
+      lightbox.classList.add("open");
+    }
+  });
+
+  lightboxClose.addEventListener("click", () => lightbox.classList.remove("open"));
+  lightbox.addEventListener("click", e => {
+    if (e.target === lightbox) lightbox.classList.remove("open");
+  });
+
+  loadTestimonials();
+</script>
+
+</body>
+</html>

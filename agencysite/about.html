@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Cosmic Agency</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+
+<body>
+  <div class="ambient-bg"></div>
+
+  <!-- NAV -->
+
+  <header class="apple-nav">
+    <div class="nav-left">
+      <img src="/assets/images/logo-placeholder.png" class="nav-logo">
+      <span><a href="/" style="text-decoration:none;color:var(--text-primary);">Cosmic Agency</a></span>
+    </div>
+    <nav class="nav-center">
+      <a href="/index.html">Home</a>
+      <a href="/about.html" class="active">About</a>
+      <a href="/portfolio.html">Portfolio</a>
+      <a href="/testimonials.html">Testimonials</a>
+      
+    </nav>
+  </header>
+
+  <main class="container">
+<!-- HERO -->
+<section class="hero fade-up" style="text-align:center;">
+  <h1>This Didn’t Start As An Agency</h1>
+  <p class="text-muted">
+    It started with bad edits, low views, and figuring things out the hard way.
+  </p>
+</section>
+
+<!-- STORY -->
+<section class="glass-card fade-up" style="margin-top:2rem;">
+  <p class="text-muted">
+    When I started editing, nothing worked.
+  </p>
+
+  <p class="text-muted">
+    Videos weren’t getting views. Retention was low. Every edit felt like guessing.
+  </p>
+
+  <p class="text-muted">
+    So instead of quitting, I started studying what actually makes people stay.
+  </p>
+
+  <p class="text-muted">
+    I broke down viral videos frame by frame — pacing, cuts, hooks, captions, sound design.
+  </p>
+
+  <p class="text-muted">
+    Not just how they look… but why they work.
+  </p>
+
+  <p class="text-muted">
+    Slowly, things changed.
+  </p>
+
+  <p class="text-muted">
+    Edits became sharper. Retention improved. Content started performing.
+  </p>
+
+  <p class="text-muted">
+    That’s when Cosmic Agency was built — not as a “service”, but as a system.
+  </p>
+
+  <p class="text-gradient">
+    A system focused on one thing: keeping viewers watching.
+  </p>
+</section>
+
+<!-- POSITIONING -->
+<section class="fade-up" style="margin-top:3rem;text-align:center;">
+  <h2>Most Editors Focus On Looks</h2>
+  <p class="text-muted">
+    We focus on retention, pacing, and performance.
+  </p>
+</section>
+
+<!-- DIFFERENCE -->
+<section class="grid-auto fade-up" style="margin-top:2rem;">
+  <div class="glass-card">🎯 Every cut has a purpose</div>
+  <div class="glass-card">⚡ Hooks built to stop scrolling</div>
+  <div class="glass-card">📈 Edits designed for growth, not just style</div>
+  <div class="glass-card">🧠 Based on real viral patterns</div>
+</section>
+
+<!-- TRUST -->
+<section class="glass-card fade-up" style="text-align:center;margin-top:3rem;">
+  <p class="text-gradient" style="font-size:1.2rem;">
+    ⭐ <span id="avgRating">--</span> Client Rating
+  </p>
+  <p class="text-muted">
+    Trusted by creators who want results, not just edits
+  </p>
+</section>
+
+<!-- CTA -->
+<section class="glass-card fade-up" style="text-align:center;margin:3rem auto;">
+  <h2>If You're Serious About Growth</h2>
+  <p class="text-muted">
+    Don’t settle for average edits.
+  </p>
+
+  <div class="hero-buttons" style="margin-top:1rem;">
+    <a href="https://calendly.com/cakebreakerrock/30min" target="_blank" rel="noopener" class="btn btn-primary">Book on Calendly</a>
+    <a href="https://wa.me/919014682137" target="_blank" rel="noopener" class="btn btn-secondary">Message on WhatsApp</a>
+  </div>
+</section>
+
+  </main>
+
+  <!-- FOOTER -->
+
+  <footer class="footer" style="text-align:center;padding:3rem;">
+    <p class="text-muted">© 2026 Cosmic Agency</p>
+  </footer>
+
+  <!-- Firebase Rating -->
+
+  <script type="module">
+    import { db } from "/assets/js/firebase.js";
+    import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    const ratingEl = document.getElementById("avgRating");
+
+    async function loadAverageRating() {
+      const snap = await getDocs(collection(db, "testimonials"));
+
+      let total = 0;
+      let count = 0;
+
+      snap.forEach(doc => {
+        const data = doc.data();
+        if (data.rating) {
+          total += data.rating;
+          count++;
+        }
+      });
+
+      ratingEl.textContent = count ? (total / count).toFixed(1) : "0.0";
+    }
+
+    loadAverageRating();
+  </script>
+
+</body>
+</html>

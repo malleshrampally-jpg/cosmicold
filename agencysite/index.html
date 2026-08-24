@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Cosmic Agency | Elite Video Editing</title>
+  <meta name="title" content="Cosmic Agency | Elite Short-Form Video Editing Services">
+  <meta name="description" content="Cosmic Agency is a premium video editing agency specializing in high-retention, viral-ready short-form content for YouTube Shorts, TikTok, and Instagram Reels.">
+  <meta name="keywords" content="Cosmic Agency, short form video editing, video editing agency, YouTube Shorts editor, TikTok video editor, Instagram Reels editing, viral video editing, high-retention edits">
+  <meta name="author" content="Cosmic Agency">
+  
+  <meta name="robots" content="index, follow">
+  
+  <link rel="canonical" href="https://www.cosmicagency.netlify.app/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.cosmicagency.netlify.app/">
+  <meta property="og:title" content="Cosmic Agency | Elite Short-Form Video Editing">
+  <meta property="og:description" content="Premium short-form editors. We deliver the pacing psychology that keeps viewers hooked. Turn your content into viral hits.">
+  <meta property="og:image" content="https://www.cosmicagency.netlify.app/assets/images/logo-placeholder.png">
+  <meta property="og:site_name" content="Cosmic Agency">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://www.cosmicagency.netlify.app/">
+  <meta property="twitter:title" content="Cosmic Agency | Elite Short-Form Video Editing">
+  <meta property="twitter:description" content="Premium short-form editors. We deliver the pacing psychology that keeps viewers hooked. Turn your content into viral hits.">
+  <meta property="twitter:image" content="https://www.cosmicagency.netlify.app/assets/images/logo-placeholder.png">
+  <meta name="google-adsense-account" content="ca-pub-8542186523773331">
+
+  <link rel="icon" href="/assets/images/logo-placeholder.png" type="image/png">
+  <link rel="stylesheet" href="/assets/css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Cosmic Agency",
+    "url": "https://www.yourdomain.com/",
+    "logo": "https://www.yourdomain.com/assets/images/logo-placeholder.png",
+    "description": "Cosmic Agency is a premium short-form video editing agency delivering high-retention, viral-ready edits for creators and brands.",
+    "sameAs": [
+      "https://www.youtube.com/channel/UC9oFy6gFmCnx_YCpv9RmCMA",
+      "https://wa.me/919014682137",
+      "https://www.instagram.com/cosmic_vishal1/"
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Video Editing Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Short-Form Video Editing"
+          }
+        }
+      ]
+    }
+  }
+  </script>
+</head>
+
+<script type="module">
+  import { db } from "/assets/js/firebase.js";
+  import {
+    collection,
+    getDocs
+  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+  const ratingEl = document.getElementById("avgRating");
+
+  async function loadAverageRating() {
+    try {
+      const snap = await getDocs(collection(db, "testimonials"));
+
+      if (snap.empty) {
+        ratingEl.textContent = "0.0";
+        return;
+      }
+
+      let total = 0;
+      let count = 0;
+
+      snap.forEach(doc => {
+        const data = doc.data();
+        if (data.rating) {
+          total += data.rating;
+          count++;
+        }
+      });
+
+      const avg = (total / count).toFixed(1);
+
+      ratingEl.textContent = avg;
+
+    } catch (err) {
+      console.error("Error calculating rating:", err);
+      ratingEl.textContent = "—";
+    }
+  }
+
+  loadAverageRating();
+</script>
+
+<body>
+  <div class="ambient-bg"></div>
+
+  <header class="apple-nav">
+    <div class="nav-left">
+      <img src="/assets/images/logo-placeholder.png" class="nav-logo" alt="Cosmic Agency Logo">
+      <span><a href="/" style="text-decoration: none; color: var(--text-primary);">Cosmic Agency</a></span>
+    </div>
+    <nav class="nav-center">
+      <a href="/index.html" class="active">Home</a>
+      <a href="/about.html">About</a>
+      <a href="/portfolio.html">Portfolio</a>
+      <a href="/testimonials.html">Testimonials</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero fade-up">
+      <img src="/assets/images/logo-placeholder.png" alt="Cosmic Agency" class="logo" style="margin-top: -6rem;">
+      <h1>Elite Edits.<br>Viral Retention.</h1>
+      <p class="hero-sub text-muted">
+        We help creators and businesses turn raw clips into high-retention content for YouTube, TikTok, and Reels.
+      </p>
+      <p class="text-muted">
+        Trusted by creators & brands worldwide
+      </p>
+      <p class="text-gradient" style="font-size: 1.25rem; margin-top: -1rem;">
+        ⭐ <span id="avgRating">--</span> Client Rating • 100+ Videos Edited • Fast Turnaround
+      </p>  
+      <div class="hero-buttons">
+        <a href="/about.html" class="btn btn-primary" data-skeel>About Us</a>
+        <a href="/portfolio.html" class="btn btn-secondary" data-skeel>View Portfolio</a>
+      </div>
+    </section>
+
+    <section class="testimonials fade-up">
+      <h2 style="text-align: center;">What Clients Say</h2>
+      
+      <div id="testimonial-grid" class="grid-auto" style="margin-top: 3rem;">
+        </div>
+      
+      <div style="text-align: center; margin-top: 3rem;">
+        <button class="btn btn-ghost" onclick="window.location.href='testimonials.html';">Show All Testimonials</button>
+      </div>
+    </section>    
+
+    <section class="glass-card fade-up" style="text-align:center;margin:3rem auto;padding:2rem;max-width:700px;">
+      <h2>Let's Talk About Your Project</h2>
+      <p class="text-muted">
+        Tell us what you are building and we will help shape the right editing plan.
+      </p>
+
+      <div class="hero-buttons" style="margin-top:1.5rem;">
+        <a href="https://calendly.com/cakebreakerrock/30min" target="_blank" rel="noopener" class="btn btn-primary" data-skeel>
+          Book on Calendly
+        </a>
+        <a href="https://wa.me/919014682137" target="_blank" rel="noopener" class="btn btn-secondary" data-skeel>
+          Message on WhatsApp
+        </a>
+      </div>
+    </section>
+
+    <section id="founder" class="owner glass-card fade-up delay-100">
+      <img src="assets/images/owner-placeholder.png" alt="Vishal" class="avatar large">
+      <div>
+        <h2>Vishal</h2>
+        <span class="badge badge-orange">Founder • Lead Editor</span>
+        <p class="text-muted" style="margin-top: 1rem;">
+          Founder of Cosmic Agency. Specialized in high-retention short-form editing, storytelling cuts, pacing psychology, and viral structure.
+        </p>
+        <p class="speciality text-gradient">
+          🎯 Specialty: Viral short-form strategy & retention optimization
+        </p>
+      </div>
+    </section>
+
+    <section id="editors" class="fade-up delay-300">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <h2>Our Editors</h2>
+        <p class="text-muted" style="font-size: 1.25rem;">Hand-picked editors trusted by Cosmic Agency</p>
+      </div>
+      
+      <div class="marquee-container">
+        <div id="editor-list" class="marquee-track">
+          </div>
+      </div>
+    </section>
+  </main>
+
+    <section class="orders-box fade-up delay-200">
+      <h2 class="orders-number">100+</h2>
+      <p class="text-gradient">Videos Edited</p>
+    </section>
+
+    <!-- Track order removed -->
+
+    <section class="socials" style="text-align:center;margin-top:2rem;">
+      <p class="muted">Find us online</p>
+      <div style="display:inline-flex;gap:14px;align-items:center">
+        <a href="https://www.instagram.com/cosmic_vishal1/" target="_blank" rel="noopener" aria-label="Instagram" class="btn ghost" data-skeel>
+          <!-- Instagram SVG -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8"></path><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line></svg>
+        </a>
+
+        <a href="https://www.youtube.com/channel/UC9oFy6gFmCnx_YCpv9RmCMA" target="_blank" rel="noopener" aria-label="YouTube" class="btn ghost" data-skeel>
+          <!-- YouTube SVG -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 7s-.2-1.4-.8-2c-.7-.8-1.5-.8-1.9-.9C16.4 4 12 4 12 4s-4.4 0-7.3.1c-.4 0-1.3 0-2 .9C1.2 5.6 1 7 1 7S1 8.6 1 10.3v3.4C1 16 1.2 17.4 1.8 18.2c.7.8 1.6.8 2 .9C7.6 20 12 20 12 20s4.4 0 7.3-.1c.4 0 1.3 0 2-.9.6-.8.8-2.2.8-2.2V7z"></path><polygon points="10 15 15 12 10 9 10 15"></polygon></svg>
+        </a>
+
+        <a href="https://wa.me/919014682137" target="_blank" rel="noopener" aria-label="WhatsApp" class="btn ghost" data-skeel>
+          <!-- WhatsApp contact -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"></path><path d="M8.5 8.5c.2-.4.4-.4.7-.4h.4c.2 0 .3.1.4.4l.6 1.4c.1.2.1.4-.1.6l-.5.5c.5 1 1.3 1.8 2.3 2.3l.5-.5c.2-.2.4-.2.6-.1l1.4.6c.3.1.4.2.4.4v.4c0 .3 0 .5-.4.7-.4.2-1 .3-1.5.1-1.3-.3-2.5-1-3.5-2s-1.7-2.2-2-3.5c-.1-.5 0-1.1.2-1.5Z"></path></svg>
+        </a>
+      </div>
+    </section>
+
+<footer class="footer" style="text-align: center; padding: 4rem 2rem; border-top: 1px solid var(--border-glass-base); margin-top: 4rem;">
+  <img src="assets/images/logo-placeholder.png" alt="Cosmic Agency Logo" class="nav-logo" style="margin-bottom: 1rem; opacity: 0.7;">
+
+  <p class="text-muted">© 2026 Cosmic Agency. All Rights Reserved. <a href="/terms.html">Terms & Conditions</a></p>
+  <p class="text-muted" style="font-size: 0.85rem; margin-top: 0.5rem; letter-spacing: 0.5px;">Designed by the Founder</p>
+</footer>
+
+  <script>
+    document.querySelectorAll("a[href]").forEach(link => {
+      const url = link.getAttribute("href");
+      if (url.startsWith("#") || url.startsWith("http")) return;
+      
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        document.body.classList.add("page-exit");
+        setTimeout(() => {
+          window.location.href = url;
+        }, 400); // Matches the pageFadeOut animation duration
+      });
+    });
+  </script>
+
+  <script type="module" src="assets/js/index.js"></script>
+  
+ <script>
+    /* ────────── ROCKET FLIGHT SYSTEM ────────── */
+    const ROCKET_IMAGE_URL = 'https://cdn-icons-png.flaticon.com/128/8089/8089316.png'; 
+    const FLIGHT_DURATION = 5000; 
+    const SPAWN_INTERVAL = 3000; 
+    const IMAGE_ANGLE_OFFSET = 90; 
+
+    function launchRocket() {
+      const rocket = document.createElement('img');
+      rocket.src = ROCKET_IMAGE_URL;
+      rocket.className = 'cosmic-rocket';
+      // Set absolute positioning so it doesn't affect page layout
+      rocket.style.position = 'fixed';
+      rocket.style.top = '0';
+      rocket.style.left = '0';
+      rocket.style.width = 'zpx'; // Adjust size if needed
+      rocket.style.opacity = '0.3'; // Keep it subtle
+      rocket.style.pointerEvents = 'none';
+      rocket.style.zIndex = '-1';
+      document.body.appendChild(rocket);
+
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const offset = 150; 
+
+      const startEdge = Math.floor(Math.random() * 4);
+      let endEdge = Math.floor(Math.random() * 4);
+      while (startEdge === endEdge) {
+        endEdge = Math.floor(Math.random() * 4);
+      }
+
+      const startCoords = getEdgeCoordinates(startEdge, w, h, offset);
+      const endCoords = getEdgeCoordinates(endEdge, w, h, offset);
+
+      const deltaX = endCoords.x - startCoords.x;
+      const deltaY = endCoords.y - startCoords.y;
+      
+      let angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+      angle += IMAGE_ANGLE_OFFSET; 
+
+      const flight = rocket.animate([
+        { transform: `translate(${startCoords.x}px, ${startCoords.y}px) rotate(${angle}deg)` },
+        { transform: `translate(${endCoords.x}px, ${endCoords.y}px) rotate(${angle}deg)` }
+      ], {
+        duration: FLIGHT_DURATION,
+        easing: 'linear',
+        fill: 'forwards'
+      });
+
+      flight.onfinish = () => {
+        rocket.remove();
+      };
+    }
+
+    function getEdgeCoordinates(edge, width, height, offset) {
+      switch (edge) {
+        case 0: return { x: Math.random() * width, y: -offset }; 
+        case 1: return { x: width + offset, y: Math.random() * height }; 
+        case 2: return { x: Math.random() * width, y: height + offset }; 
+        case 3: return { x: -offset, y: Math.random() * height }; 
+      }
+    }
+
+    setInterval(launchRocket, SPAWN_INTERVAL);
+    setTimeout(launchRocket, 2000);
+  </script>
+</body>
+</html>

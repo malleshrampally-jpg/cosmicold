@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cosmic Agency • Portfolio</title>
+  <meta name="description" content="Cosmic Agency editor portfolios and works">
+  <meta name="keywords" content="Cosmic Agency, portfolio, video editing, editors">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body>
+
+<header class="apple-nav">
+  <div class="nav-left">
+    <img src="/assets/images/logo-placeholder.png" class="nav-logo">
+    <span><a href="/" style="text-decoration: none; color: var(--text-primary);">Cosmic Agency</a></span>
+  </div>
+
+  <nav class="nav-center">
+    <a href="/index.html">Home</a>
+    <a href="/about.html">About</a>
+    <a href="/portfolio.html" class="active">Portfolio</a>
+    <a href="/testimonials.html">Testimonials</a>
+  </nav>
+</header>
+
+<main class="portfolio-container">
+
+  <div id="media-modal" class="media-modal">
+  <div class="modal-backdrop" onclick="closeModal()"></div>
+  
+  <div class="modal-content card">
+    <button class="modal-close" onclick="closeModal()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+
+    <div class="modal-media-wrapper">
+      <iframe id="modal-iframe" src="" frameborder="0" allow="autoplay" allowfullscreen></iframe>
+    </div>
+
+    <div class="modal-toolbar">
+      <div class="modal-title" id="modal-title">Project Title</div>
+      <div class="modal-actions">
+        <button class="ghost" onclick="copyMediaLink()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          Share
+        </button>
+        </div>
+    </div>
+  </div>
+</div>
+
+  <div class="folder-navigation">
+    
+    <button class="ghost folder-btn" onclick="changeFolder('1kT7XA0geZtLC69_cHEju7opcojqBe_bU')" style="color: white;">
+      Intros
+    </button>
+    
+    <button class="ghost folder-btn" onclick="changeFolder('1Zt84HheE04vCt8dKr5fRNWFW9EPSN5Bz')" style="color: white;">
+      Long-Form
+    </button>
+  
+    <button class="ghost folder-btn" onclick="changeFolder('1bXwBY757hR3NofrdHmLsFA3QB8xkrMTG')" style="color: white;">
+      Short-Form
+    </button>
+
+    <button class="ghost folder-btn" onclick="changeFolder('1YGdbPv-zbF7xrdepmJTPxyc9HUCXi6xr')" style="color: white;">
+      Motion-Graphics
+    </button>
+
+    <button class="ghost folder-btn" onclick="changeFolder('1I-2xtfAXImKIvr9JXs5Q7Fgtme2j8oOO')" style="color: white;">
+      Anime Edits
+    </button>
+
+    <button class="ghost folder-btn" onclick="changeFolder('1SqPqFLATZOVfab4ScOPkMCt0GF8XBs9C')" style="color: white;">
+      Thumbnails
+    </button>
+  </div>
+
+  <div class="portfolio-wrapper">
+    <iframe 
+      id="portfolio-frame"
+      src="https://drive.google.com/embeddedfolderview?id=1kT7XA0geZtLC69_cHEju7opcojqBe_bU#grid"
+      width="100%" 
+      height="100%"
+      allow="autoplay"
+      allowfullscreen
+      frameborder="0"
+      class="responsive-iframe"
+      loading="lazy">
+    </iframe>
+  </div>
+
+</main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('a[href]').forEach(link => {
+      const url = link.getAttribute('href');
+      if (!url) return;
+      if (url.startsWith('#') || url.startsWith('http')) return;
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        document.body.classList.add('page-exit');
+        setTimeout(() => { window.location.href = url; }, 400);
+      });
+    });
+  });
+  function changeFolder(folderId) {
+    const iframe = document.getElementById('portfolio-frame');
+    // This updates the iframe to show the new folder inside the same container
+    iframe.src = "https://drive.google.com/embeddedfolderview?id=" + folderId + "#grid";
+  }
+  // Variables to hold current media info
+  let currentMediaUrl = "";
+
+  function openMediaModal(driveFileId, title) {
+    const modal = document.getElementById('media-modal');
+    const iframe = document.getElementById('modal-iframe');
+    const titleElement = document.getElementById('modal-title');
+
+    // Convert Drive File ID to a Preview URL
+    currentMediaUrl = `https://drive.google.com/file/d/${driveFileId}/preview`;
+    
+    // Set content
+    iframe.src = currentMediaUrl;
+    titleElement.innerText = title;
+
+    // Show modal
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('media-modal');
+    const iframe = document.getElementById('modal-iframe');
+
+    // Hide modal
+    modal.classList.remove('active');
+    document.body.style.overflow = ''; // Restore scrolling
+    
+    // Clear iframe src to stop video playing in background
+    setTimeout(() => { iframe.src = ""; }, 400); 
+  }
+
+  function copyMediaLink() {
+    navigator.clipboard.writeText(currentMediaUrl).then(() => {
+      // Find the share button to give visual feedback
+      const shareBtn = document.querySelector('.modal-actions .ghost');
+      if (!shareBtn) return;
+      const originalText = shareBtn.innerHTML;
+      
+      shareBtn.innerHTML = "Copied!";
+      shareBtn.style.color = "var(--accent-blue-500)";
+      shareBtn.style.borderColor = "var(--accent-blue-500)";
+      
+      setTimeout(() => {
+        shareBtn.innerHTML = originalText;
+        shareBtn.style.color = "";
+        shareBtn.style.borderColor = "";
+      }, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>

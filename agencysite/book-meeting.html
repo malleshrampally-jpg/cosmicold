@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book a Meeting | Cosmic Agency</title>
+  <meta name="description" content="Book a project conversation with Cosmic Agency.">
+  <link rel="icon" href="/assets/images/logo-placeholder.png" type="image/png">
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <div class="ambient-bg"></div>
+
+  <header class="apple-nav">
+    <div class="nav-left">
+      <img src="/assets/images/logo-placeholder.png" class="nav-logo" alt="Cosmic Agency Logo">
+      <span><a href="/" style="text-decoration:none;color:var(--text-primary);">Cosmic Agency</a></span>
+    </div>
+    <nav class="nav-center">
+      <a href="/index.html">Home</a>
+      <a href="/about.html">About</a>
+      <a href="/portfolio.html">Portfolio</a>
+      <a href="/testimonials.html">Testimonials</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="glass-card fade-up" style="max-width:680px;margin:5rem auto 3rem;padding:clamp(1.5rem,5vw,3rem);">
+      <p class="text-gradient" style="font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;">Project conversation</p>
+      <h1 style="margin-top:.75rem;">Book a Meeting</h1>
+      <p class="text-muted" style="margin-top:1rem;line-height:1.7;">Share a little about your content and goals. We will reply with a time that works for you.</p>
+
+      <form id="meeting-form" style="display:grid;gap:1rem;margin-top:2rem;">
+        <label>Name
+          <input name="name" type="text" required placeholder="Your name" autocomplete="name">
+        </label>
+        <label>Email
+          <input name="email" type="email" required placeholder="you@example.com" autocomplete="email">
+        </label>
+        <label>What are you working on?
+          <textarea name="project" rows="4" required placeholder="Tell us about your channel, brand, or next project."></textarea>
+        </label>
+        <label>Preferred timing
+          <input name="timing" type="text" placeholder="For example: weekday evenings UTC+5:30">
+        </label>
+        <button type="submit" class="btn btn-primary">Request a Meeting</button>
+        <p id="meeting-note" class="text-muted" style="font-size:.85rem;text-align:center;min-height:1.2em;"></p>
+      </form>
+
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:1rem;">
+        <a href="https://wa.me/919014682137" target="_blank" rel="noopener" class="btn btn-secondary">Message on WhatsApp</a>
+        <a href="https://calendly.com/cakebreakerrock/30min" target="_blank" rel="noopener" class="btn btn-primary">Book on Calendly</a>
+        <a href="/" class="btn btn-ghost">Back to Home</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" style="text-align:center;padding:3rem 1rem;">
+    <p class="text-muted">© 2026 Cosmic Agency. All Rights Reserved. <a href="/terms.html">Terms &amp; Conditions</a></p>
+  </footer>
+
+  <script>
+    const form = document.getElementById('meeting-form');
+    const note = document.getElementById('meeting-note');
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const subject = `Meeting request from ${data.get('name')}`;
+      const body = [
+        `Name: ${data.get('name')}`,
+        `Email: ${data.get('email')}`,
+        `Project: ${data.get('project')}`,
+        `Preferred timing: ${data.get('timing') || 'Open to suggestions'}`
+      ].join('\n\n');
+      window.location.href = `mailto:info@cosmicagency.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      note.textContent = 'Your email app should open with the meeting request ready to send.';
+    });
+  </script>
+</body>
+</html>

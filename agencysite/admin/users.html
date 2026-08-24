@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Users - Cosmic Agency</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    /* ── Toast ── */
+    #toast-container {
+      position: fixed; bottom: 28px; right: 24px; z-index: 9999;
+      display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+    }
+    .toast {
+      padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 600;
+      color: #fff; opacity: 0; transform: translateY(12px);
+      transition: opacity .3s ease, transform .3s ease; pointer-events: none; max-width: 320px;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: rgba(48,209,88,0.18); border: 1px solid rgba(48,209,88,0.4); color: #30D158; }
+    .toast.error   { background: rgba(255,69,58,0.18);  border: 1px solid rgba(255,69,58,0.4);  color: #FF453A; }
+
+    /* ── Password strength bar ── */
+    #pw-strength-bar {
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      margin-top: 6px;
+      overflow: hidden;
+    }
+    #pw-strength-fill {
+      height: 100%;
+      border-radius: 999px;
+      width: 0%;
+      transition: width .3s ease, background .3s ease;
+    }
+    #pw-strength-label {
+      font-size: 11px;
+      margin-top: 4px;
+      color: #505060;
+    }
+
+    /* ── User list ── */
+    .user-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      transition: border-color .2s, background .2s;
+      margin-bottom: 8px;
+    }
+    .user-row:hover { border-color: rgba(255,255,255,0.14); background: rgba(255,255,255,0.05); }
+
+    .user-avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0A84FF33, #BF5AF233);
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 700; color: #f0f0f5;
+      flex-shrink: 0;
+      object-fit: cover; /* Added in case they have a photo */
+    }
+
+    .user-info { flex: 1; min-width: 0; }
+    .user-info .user-name { font-size: 14px; font-weight: 600; color: #f0f0f5; }
+    .user-info .user-meta { font-size: 12px; color: #505060; margin-top: 2px; }
+
+    .user-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+    .role-badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 999px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    }
+    .role-admin  { background: rgba(191,90,242,0.15); color: #BF5AF2; border: 1px solid rgba(191,90,242,0.3); }
+    .role-editor { background: rgba(10,132,255,0.15);  color: #0A84FF;  border: 1px solid rgba(10,132,255,0.3); }
+
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .status-dot.active   { background: #30D158; box-shadow: 0 0 6px #30D15888; }
+    .status-dot.inactive { background: #505060; }
+
+    /* ── Form fields ── */
+    .field-wrap { display: flex; flex-direction: column; gap: 5px; }
+    .field-wrap label { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #505060; font-weight: 600; }
+    .field-wrap input, .field-wrap select {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #f0f0f5;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color .2s;
+    }
+    .field-wrap input:focus, .field-wrap select:focus {
+      outline: none;
+      border-color: rgba(10,132,255,0.5);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+
+    /* ── Users section toolbar ── */
+    .users-toolbar {
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px;
+    }
+    .users-toolbar input {
+      flex: 1; min-width: 160px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 10px; padding: 9px 12px;
+      color: #f0f0f5; font-size: 13px; font-family: inherit;
+    }
+    .users-toolbar input::placeholder { color: #505060; }
+    .users-toolbar select {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 10px; padding: 9px 12px;
+      color: #f0f0f5; font-size: 13px; font-family: inherit;
+    }
+  </style>
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<header>
+  <h2>Manage Users</h2>
+  <nav>
+    <a href="/index.html">Home</a>
+    <a href="index.html">Dashboard</a>
+    <a href="users.html" class="active">Users</a>
+    <a href="atestimonials.html">Testimonials</a>
+    <button id="logout-btn" class="danger">Logout</button>
+  </nav>
+</header>
+
+<section class="card">
+  <h3>Create New User</h3>
+
+  <div class="form-grid">
+    <div class="field-wrap">
+      <label for="username">Username</label>
+      <input id="username" type="text" placeholder="e.g. jsmith" autocomplete="off">
+    </div>
+    
+    <div class="field-wrap">
+      <label for="role">Role</label>
+      <select id="role">
+        <option value="">Select Role</option>
+        <option value="admin">Admin</option>
+        <option value="editor">Editor</option>
+      </select>
+    </div>
+
+    <div class="field-wrap">
+      <label for="speciality">Speciality</label>
+      <input id="speciality" type="text" placeholder="e.g. High-retention Shorts, Motion Graphics" autocomplete="off">
+    </div>
+
+    <div class="field-wrap">
+      <label for="photo">Profile Photo (URL)</label>
+      <input id="photo" type="text" placeholder="https://example.com/photo.jpg" autocomplete="off">
+    </div>
+    <div class="field-wrap">
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="Min. 8 characters" autocomplete="new-password">
+      <div id="pw-strength-bar"><div id="pw-strength-fill"></div></div>
+      <span id="pw-strength-label">Enter a password</span>
+    </div>
+    
+    <div class="field-wrap">
+      <label for="password-confirm">Confirm Password</label>
+      <input id="password-confirm" type="password" placeholder="Repeat password" autocomplete="new-password">
+      <span id="pw-match-label" style="font-size:11px;margin-top:4px;color:#505060;"></span>
+    </div>
+  </div>
+
+  <button id="create-user-btn" class="primary" style="min-width:160px;">Create User</button>
+</section>
+
+<section class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <h3 style="margin:0;">All Users</h3>
+    <span id="users-count" style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,0.06);color:#88889a;"></span>
+  </div>
+  <div class="users-toolbar">
+    <input id="users-search" placeholder="Search by username or role…">
+    <select id="users-filter-role">
+      <option value="">All Roles</option>
+      <option value="admin">Admin</option>
+      <option value="editor">Editor</option>
+    </select>
+  </div>
+  <div id="users-list"></div>
+</section>
+
+<script type="module" src="../assets/js/admin/users.js"></script>
+</body>
+</html>

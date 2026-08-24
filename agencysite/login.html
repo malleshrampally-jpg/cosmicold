@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Cosmic Agency</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <h2>🎬 Editor Portfolios</h2>
+    <div style="display:flex;align-items:center;gap:0.8rem;">
+      <img src="/assets/images/logo-placeholder.png" alt="Cosmic Agency Logo" style="width:200px;height:200px;">
+      <h3>Cosmic Agency</h3>
+    </div>
+
+    <nav style="display:flex;gap:0.6rem;">
+      <a href="testimonials.html"><button class="ghost">Testimonials</button></a>
+      <a href="/"><button class="ghost">Home</button></a>
+    </nav>
+  </header>
+
+    <script type="module">
+      import { initMenu } from '/assets/js/menu.js';
+      initMenu();
+    </script>
+
+  <section class="card" style="max-width:400px;margin:50px auto;">
+    <h2>Login</h2>
+
+    <input id="username" type="text" placeholder="Username" class="inputtext">
+    <input id="password" type="password" placeholder="Password" class="inputtext">
+
+    <button id="login-btn" class="primary">Login</button>
+    <div id="login-error" class="error-msg"></div>
+  </section>
+
+  <script type="module" src="/login.js"></script>
+  <footer class="footer" style="text-align:center;padding:2rem 1rem;">
+    <p class="text-muted">© 2026 Cosmic Agency. All Rights Reserved. <a href="/terms.html">Terms & Conditions</a></p>
+  </footer>
+</body>
+</html>

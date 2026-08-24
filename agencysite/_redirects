@@ -1,0 +1,7 @@
+/              /index.html        200
+/chat          /pages/chat.html   200
+/testimonials  /testimonials.html 200
+/admin         /admin/index.html 200
+/editor        /editor/index.html 200
+/pages/*       /pages/:splat     200
+/assets/*      /assets/:splat    200
